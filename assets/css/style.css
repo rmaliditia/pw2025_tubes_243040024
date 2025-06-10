@@ -1,0 +1,186 @@
+/* CSS REGISTER */
+body,
+html {
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+textarea {
+  resize: none;
+}
+
+.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Mengatur card utama (bisa kamu bungkus kontennya dengan container jika mau) */
+.table-responsive {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0.5rem;
+}
+
+.table-movies {
+  min-width: 1200px;
+  width: 100%;
+  table-layout: auto;
+}
+
+.card .logo {
+  margin-top: -7px;
+}
+
+/* CSS DASHBOARD */
+.nav-pills .nav-link.active {
+  color: #fff !important;
+  background-color: #dc3545 !important;
+}
+
+.profile-name {
+  font-size: 0.8rem;
+}
+.role-name {
+  font-size: 0.7rem;
+}
+
+.title-sm {
+  font-size: 0.9rem;
+}
+
+.title-xs {
+  font-size: 0.8rem;
+}
+
+.main-content {
+  margin-left: 265px;
+}
+
+/* Additional style to ensure chart responsiveness within its container */
+.chart-container {
+  position: relative;
+  height: 320px;
+  /* Adjust as needed, or use aspect-ratio */
+  width: 100%;
+}
+
+.recent-activity-list {
+  max-height: 530px;
+  /* Adjust max height as needed */
+  overflow-y: scroll;
+}
+
+.card-body h4 {
+  font-size: 1.75rem;
+  /* Adjust card title size if needed */
+}
+
+.card-body .fs-1 {
+  font-size: 2.5rem !important;
+  /* Adjust icon size in cards */
+}
+
+/* CSS FILTERS BUTTON */
+.dropdown-item.active {
+  color: #fff !important;
+  background-color: #dc3545 !important;
+}
+
+/* CSS TABLE TOP users */
+/* .table-title {
+  margin: 11px 0px -3px 0px;
+} */
+
+.search-header {
+  margin: 11px 0px -3px 0px;
+}
+
+.button-header {
+  margin: 11px 20px -3px 0px;
+}
+
+.table-fixed {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+
+.table-movies {
+  max-width: 100% !important;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.9rem 0.9rem !important;
+}
+
+.table-movies thead tr th {
+  font-weight: 500;
+}
+
+.table-movies tbody tr td {
+  font-size: 1rem;
+}
+
+.table-movies thead tr th,
+.table-movies tbody tr td {
+  text-align: center;
+}
+
+.text-wrap {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+
+.table-movies td {
+  white-space: nowrap;
+}
+
+/* CSS USERS */
+.custom-button a:focus,
+.custom-button a:active {
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+}
+
+.custom-button a:hover {
+  color: #dc3545 !important;
+}
+
+/* CSS PAGINATION */
+.pagination .page-item .page-link {
+  border: none !important;
+  background-color: transparent !important;
+  padding: 0.1rem 0.4rem !important;
+}
+
+/* Tambahkan gaya khusus untuk panah kiri dan kanan */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+  color: #dc3545 !important;
+}
+
+/* .modal-body .row {
+  margin-bottom: 1rem;
+} */
+
+.movie-poster {
+  max-width: 100%;
+  height: 100% !important;
+  object-fit: cover !important;
+  /* border-radius: 8px; */
+}
+
+@media (min-width: 992px) {
+  .modal-lg,
+  .modal-xl {
+    --bs-modal-width: 1000px !important;
+  }
+}
+
+/* CSS tambahan untuk memperkecil form */
+.modal-body,
+.modal-content {
+  font-size: 0.8rem !important;
+}
