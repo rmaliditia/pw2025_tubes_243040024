@@ -33,36 +33,3 @@ new Chart(ctx, {
 });
 
 // JS MOVIE
-function showMovieDetail(id) {
-  // lakukan AJAX untuk ambil data movie
-  console.log("Lihat detail film ID:", id);
-}
-
-// Event listener untuk modal
-document
-  .getElementById("movieDetailModal")
-  .addEventListener("shown.bs.modal", function () {
-    console.log("Modal is fully shown");
-  });
-
-document
-  .getElementById("movieDetailModal")
-  .addEventListener("hidden.bs.modal", function () {
-    console.log("Modal is hidden");
-  });
-
-// Konfirmasi sebelum menyimpan
-document.getElementById("movieForm").addEventListener("submit", function (e) {
-  if (!confirm("Simpan perubahan pada film ini?")) {
-    e.preventDefault();
-  }
-});
-
-// Konfirmasi sebelum membatalkan
-document.getElementById("cancelBtn").addEventListener("click", function () {
-  if (confirm("Yakin batal dan keluar tanpa menyimpan?")) {
-    bootstrap.Modal.getInstance(
-      document.getElementById("movieDetailModal")
-    ).hide();
-  }
-});

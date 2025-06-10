@@ -1,4 +1,4 @@
-<!-- <?php var_dump($movies); ?> -->
+<!-- MOVIES CODE START -->
 <div class="container mt-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -33,13 +33,12 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col" style="width: 10%;">No</th>
-                        <th scope="col" style="width: 30%;">Title</th>
+                        <th scope="col" style="width: 20%;">Title</th>
                         <th scope="col" style="width: 30%;">Mood</th>
                         <th scope="col" style="width: 30%;">Release Date</th>
                         <th scope="col" style="width: 30%;">Trailer</th>
                         <th scope="col" style="width: 15%;">Ratings</th>
-                        <th scope="col" style="width: 15%;">Watches</th>
-                        <th scope="col" style="width: 15%;">Like</th>
+                        <th scope="col" style="width: 15%;">Statistics</th>
                         <th scope="col" style="width: 15%;">Details</th>
                     </tr>
                 </thead>
@@ -61,8 +60,6 @@
                                 <span class="badge bg-info">
                                     <i class="bi bi-eye-fill"></i> <?php echo $movie["watch_count"]; ?>
                                 </span>
-                            </td>
-                            <td>
                                 <span class="badge bg-danger">
                                     <i class="bi bi-heart-fill"></i> <?php echo $movie["like_count"]; ?>
                                 </span>
@@ -110,16 +107,6 @@
     </div>
 </div>
 
-<!-- <?php
-        $result = mysqli_query($conn, "
-            SELECT * FROM movies WHERE id = 1");
-        $movie = mysqli_fetch_assoc($result);
-
-        echo "
-<pre>";
-        print_r($movie);
-        echo "</pre>";
-        ?> -->
 
 <!-- Movie Detail Modal -->
 <div class="modal fade" id="movieDetailModal" tabindex="-1" aria-labelledby="movieDetailModalLabel" aria-hidden="true">
@@ -137,24 +124,24 @@
                         <img src="../assets/img/inception-poster.jpg" alt="Movie Poster" class="movie-poster shadow">
                     </div>
                     <div class="col-md-7">
-                        <h3 class="fw-bold text-danger mb-3" id="modalTitle"><?php echo $movie["title"]; ?> </h3>
+                        <h3 class="fw-bold text-danger mb-3"></h3>
                         <div class=" row mb-2">
                             <div class="col-4 ps-0"><strong>Director:</strong></div>
-                            <div class="col-8"><?php echo $movie["director"]; ?></div>
+                            <div class="col-8">Aku</div>
                         </div>
 
                         <div class="row mb-2">
                             <div class="col-4 ps-0"><strong>Trailer:</strong></div>
                             <div class="col-8">
                                 <a href="https://youtu.be/8hP9D6kZseM?si=TVsT4n0ztdO_gkYh">
-                                    <p class="mb-0"><?php echo $movie["trailer_url"]; ?></p>
+                                    <p class="mb-0">https://youtu.be/8hP9D6kZseM?si=TVsT4n0ztdO_gkYh</p>
                                 </a>
                             </div>
                         </div>
 
                         <div class="row mb-2">
                             <div class="col-4 ps-0"><strong>Duration:</strong></div>
-                            <div class="col-8"><?php echo $movie["duration"]; ?> minutes</div>
+                            <div class="col-8"> minutes</div>
                         </div>
 
                         <div class="row mb-2">
@@ -177,7 +164,7 @@
 
                         <div class="row mb-2">
                             <div class="col-4 ps-0"><strong>Release Date:</strong></div>
-                            <div class="col-8"><?php echo $movie["release-date"]; ?></div>
+                            <div class="col-8"></div>
                         </div>
 
                         <div class="row mb-2">
@@ -220,53 +207,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    // JS MOVIE
-    function showMovieDetail(element) {
-        const movieId = element.getAttribute("data-id");
-
-        // Lakukan request ke PHP pakai AJAX
-        fetch(`get_movie.php?id=${movieId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Masukkan data ke dalam modal
-                document.getElementById("modalTitle").innerText = data.title;
-                document.getElementById("modalOverview").innerText = data.overview;
-                // Tambah lainnya sesuai isi modal kamu
-            })
-            .catch(error => {
-                console.error("Gagal memuat data film:", error);
-            });
-    }
-
-
-    // Event listener untuk modal
-    document
-        .getElementById("movieDetailModal")
-        .addEventListener("shown.bs.modal", function() {
-            console.log("Modal is fully shown");
-        });
-
-    document
-        .getElementById("movieDetailModal")
-        .addEventListener("hidden.bs.modal", function() {
-            console.log("Modal is hidden");
-        });
-
-    // Konfirmasi sebelum menyimpan
-    document.getElementById("movieForm").addEventListener("submit", function(e) {
-        if (!confirm("Simpan perubahan pada film ini?")) {
-            e.preventDefault();
-        }
-    });
-
-    // Konfirmasi sebelum membatalkan
-    document.getElementById("cancelBtn").addEventListener("click", function() {
-        if (confirm("Yakin batal dan keluar tanpa menyimpan?")) {
-            bootstrap.Modal.getInstance(
-                document.getElementById("movieDetailModal")
-            ).hide();
-        }
-    });
-</script>
+<!-- MOVIES CODE END -->

@@ -17,16 +17,8 @@ textarea {
 }
 
 /* Mengatur card utama (bisa kamu bungkus kontennya dengan container jika mau) */
-.table-responsive {
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 0.5rem;
-}
-
 .table-movies {
-  min-width: 1200px;
-  width: 100%;
-  table-layout: auto;
+  margin-bottom: 0;
 }
 
 .card .logo {
