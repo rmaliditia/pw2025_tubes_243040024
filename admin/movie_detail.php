@@ -5,6 +5,7 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 $query = "
 SELECT 
+    m.poster,
     m.id,
     m.title,
     m.trailer_url,
@@ -23,6 +24,7 @@ LIMIT 1
 $result = mysqli_query($conn, $query);
 $movie = mysqli_fetch_assoc($result);
 
+$movie['poster'] = $movie['poster'] ? '../assets/img/' . $movie['poster'] : '../assets/img/nophoto.jpg';
 // Ambil moods, genre, casts
 $moods = [];
 $genres = [];
