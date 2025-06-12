@@ -9,6 +9,26 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] !== 'admin') {
     exit;
 }
 
+// mengambil data users
+$users = "SELECT * FROM users u WHERE u.role = 'user'";
+$userResult = mysqli_query($conn, $users);
+
+$users = [];
+while ($row = mysqli_fetch_assoc($userResult)) {
+    $users[] = $row;
+}
+
+// mengambil data reviews
+$reviews = "SELECT * FROM reviews";
+
+$reviewResult = mysqli_query($conn, $reviews);
+
+$reviews = [];
+while ($row = mysqli_fetch_assoc($reviewResult)) {
+    $reviews[] = $row;
+}
+
+
 // mengambil informasi page
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
@@ -109,7 +129,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 <body class="">
     <!-- Sidebar Start -->
-    <div class="d-flex flex-column fixed-top flex-shrink-0 p-3 text-bg-light min-vh-100" style="width: 270px;">
+    <div class="d-flex flex-column justify-content-between fixed-top flex-shrink-0 p-3 text-bg-light min-vh-100" style="width: 270px;">
         <a href="" class="d-flex align-items-center ms-3 text-secondary text-decoration-none w-100">
             <img src="../assets/img/logo.png" alt="Logo" width="140">
         </a>
@@ -136,6 +156,13 @@ while ($row = mysqli_fetch_assoc($result)) {
                 </a>
             </li>
         </ul>
+        <ul>
+            <li>
+                <a href="../auth/logout.php" role="button" class="text-light btn-logout btn btn-danger d-flex align-items-center justify-content-center">
+                    <i class="bi bi-box-arrow-left me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
     </div>
     <!-- Sidebar End -->
 
@@ -152,7 +179,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                         <i class="bi bi-envelope fs-5"></i>
                     </div>
                     <div class="dropdown">
-                        <a href="#" class="d-flex align-items-center text-secondary text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                        <a href="#" class="d-flex align-items-center text-secondary text-decoration-none" aria-expanded="false"
                             onclick="event.preventDefault();">
                             <img src="../assets/img/nophoto.jpg" alt="profile" width="32" height="32" class="rounded-circle me-2">
                             <div class="d-flex flex-column">
@@ -208,6 +235,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                     .then(res => res.json())
                     .then(data => {
                         // Selector modal
+                        // ...setelah data movie detail di-fetch...
+                        document.querySelector('#movieDetailModal .btn-outline-danger[role="button"]').href = 'delete-movie.php?id=' + data.id;
                         document.getElementById('movieDetailModal').setAttribute('data-id', id);
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').src = data.poster;
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').alt = data.title + ' Poster';
@@ -252,6 +281,48 @@ while ($row = mysqli_fetch_assoc($result)) {
         });
     </script>
 
+    <script>
+        // Buka modal ADD movie otomatis
+        <?php if (isset($_SESSION['show_add_modal'])): ?>
+            var addModal = document.getElementById('addMovieModal');
+            if (addModal) {
+                var bsAddModal = new bootstrap.Modal(addModal);
+                bsAddModal.show();
+            }
+            <?php unset($_SESSION['show_add_modal']); ?>
+        <?php endif; ?>
+
+        // Tutup modal ADD movie otomatis
+        document.addEventListener('DOMContentLoaded', function() {
+            var addModal = document.getElementById('addMovieModal');
+            if (addModal) {
+                addModal.addEventListener('hidden.bs.modal', function() {
+                    // Hapus alert error jika modal ditutup
+                    var alert = addModal.querySelector('.alert-danger');
+                    if (alert) alert.remove();
+                });
+            }
+        });
+        // Buka modal EDIT movie otomatis
+        <?php if (isset($_SESSION['upload_error_edit']) && isset($_SESSION['edit_movie_id'])): ?>
+            var editModal = document.getElementById('editMovieModal');
+            if (editModal) {
+                var bsEditModal = new bootstrap.Modal(editModal);
+                bsEditModal.show();
+            }
+        <?php endif; ?>
+        // Tutup modal EDIT movie otomatis
+        document.addEventListener('DOMContentLoaded', function() {
+            var editModal = document.getElementById('editMovieModal');
+            if (editModal) {
+                editModal.addEventListener('hidden.bs.modal', function() {
+                    // Hapus alert error jika modal ditutup
+                    var alert = editModal.querySelector('.alert-danger');
+                    if (alert) alert.remove();
+                });
+            }
+        });
+    </script>
 
     <!-- DATATABLES BOOTSTRAP 5 -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -267,6 +338,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- SETTING DATATABLES JS (MOVIES DAN USERS) -->
     <script>
         $(document).ready(function() {
             var table = $('#example').DataTable({
@@ -334,9 +408,76 @@ while ($row = mysqli_fetch_assoc($result)) {
                     [0, 'asc']
                 ]
             });
+
+            var table = $('#example2').DataTable({
+                dom: '<"d-flex justify-content-between align-items-center datatables-top-menu"lfB>rt<"d-flex justify-content-between align-items-center datatables-bottom-menu"ip>',
+                buttons: [{
+                    extend: 'print',
+                    text: '<i class="bi bi-printer me-2"></i>Print',
+                    exportOptions: {
+                        columns: ':not(:last-child), :not(:first-child)'
+                    },
+                    customize: function(win) {
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css({
+                                'font-size': 'inherit',
+                                'border': '1px solid #000'
+                            });
+                        $(win.document.body).find('thead').css({
+                            'background-color': '#dc3545',
+                            'color': '#fff'
+                        });
+                    }
+                }],
+                responsive: true,
+                language: {
+                    lengthMenu: "Show&nbsp; _MENU_ users per page",
+                    search: "",
+                    searchPlaceholder: "Search users..."
+                },
+                lengthMenu: [5, 10, 20, 50, -1],
+                columns: [{
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        orderable: false,
+                        searchable: false
+                    } // kolom detail (tidak di-print)
+                ],
+                order: [
+                    [0, 'asc']
+                ]
+            });
+
+
         });
     </script>
-
 </body>
 
 </html>

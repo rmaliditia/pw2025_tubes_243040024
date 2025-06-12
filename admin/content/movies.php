@@ -99,7 +99,6 @@ while ($row = mysqli_fetch_assoc($result)) {
     </div>
 </div>
 
-
 <!-- Detail Movie Modal -->
 <div class="modal fade" id="movieDetailModal" tabindex="-1" aria-labelledby="movieDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -168,6 +167,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
+                <a href="delete-movie.php?id=<?= htmlspecialchars($movie['id']); ?>" role="button" class="btn btn-outline-danger" onclick="return confirm('Yakin ingin menghapus movie ini?');">
+                    <i class="bi bi-x-circle me-2"></i>Delete
+                </a>
                 <button class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#editMovieModal">
                     <i class="bi bi-pencil-square me-2"></i>Edit Movie
@@ -224,6 +226,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </div>
                     <div class="col-6">
                         <label class="form-label mb-1">Poster</label>
+                        <?php if (isset($_SESSION['upload_error_add'])): ?>
+                            <div class="alert alert-danger py-2 px-3 mb-2">
+                                <?= $_SESSION['upload_error_add']; ?>
+                            </div>
+                            <?php unset($_SESSION['upload_error_add']); ?>
+                        <?php endif; ?>
                         <input type="file" name="poster" class="form-control form-control-sm">
                     </div>
                     <div class="col-6">
@@ -304,6 +312,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </div>
                     <div class="col-6">
                         <label class="form-label mb-1">Poster</label>
+                        <?php if (isset($_SESSION['upload_error_edit']) && isset($_SESSION['edit_movie_id'])): ?>
+                            <div class="alert alert-danger py-2 px-3 mb-2">
+                                <?= $_SESSION['upload_error_edit']; ?>
+                            </div>
+                            <?php unset($_SESSION['upload_error_edit'], $_SESSION['edit_movie_id']); ?>
+                        <?php endif; ?>
                         <input type="file" name="poster" class="form-control form-control-sm">
                     </div>
                     <div class="col-6">

@@ -7,6 +7,14 @@ html {
   padding: 0;
 }
 
+ul,
+li,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 textarea {
   resize: none;
 }
@@ -48,6 +56,10 @@ textarea {
 
 .main-content {
   margin-left: 265px;
+}
+
+.btn-logout:hover {
+  background-color: #be192a !important;
 }
 
 /* Additional style to ensure chart responsiveness within its container */
@@ -153,6 +165,10 @@ textarea {
   box-shadow: none !important;
   outline: none !important;
   border: none !important;
+}
+
+.custom-button a:hover {
+  background-color: #dc3545 !important;
 }
 
 .custom-button a:hover {
@@ -278,4 +294,14 @@ div.dt-container .dt-paging .dt-paging-button {
 .form-select option:hover {
   color: #fff !important;
   background-color: #dc3545 !important;
+}
+
+/* CSS UNTUK USERS */
+
+.custom-carousel-img {
+  height: 350px !important; /* Ubah sesuai kebutuhan */
+  object-fit: cover;
+}
+.custom-carousel-item {
+  height: 350px; /* Ubah sesuai kebutuhan */
 }

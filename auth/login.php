@@ -7,7 +7,7 @@ if (isset($_SESSION["login"])) {
     if ($_SESSION["role"] === 'admin') {
         header("Location: ../admin/index.php");
     } else {
-        header("Location: ../home.php");
+        header("Location: ../user/home.php");
     }
     exit;
 }
@@ -34,7 +34,7 @@ if (isset($_POST['login'])) {
             if ($row["role"] === 'admin') {
                 header("Location: ../admin/index.php");
             } else {
-                header("Location: ../home.php");
+                header("Location: ../user/home.php");
             }
             exit;
         } else {

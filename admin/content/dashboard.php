@@ -1,17 +1,5 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body> -->
+<!-- <?php var_dump($users) ?>
+<?php var_dump($reviews) ?> -->
 <div class="row mb-4 gx-0">
     <div class="col-lg-8 mb-3 mb-lg-0 pe-2">
         <div class="row mb-2">
@@ -20,7 +8,7 @@
                     <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-3">
                         <i class="bi bi-film fs-1 text-danger mb-2"></i>
                         <p class="mb-1 title-sm text-muted">Total Movies</p>
-                        <h4 class="fw-bold m-0">234</h4>
+                        <h4 class="fw-bold m-0"><?php echo count($movies); ?></h4>
                     </div>
                 </div>
             </div>
@@ -29,7 +17,7 @@
                     <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-3">
                         <i class="bi bi-people fs-1 text-primary mb-2"></i>
                         <p class="mb-1 title-sm text-muted">Total Users</p>
-                        <h4 class="fw-bold m-0">234</h4>
+                        <h4 class="fw-bold m-0"><?php echo count($users); ?></h4>
                     </div>
                 </div>
             </div>
@@ -38,7 +26,7 @@
                     <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-3">
                         <i class="bi bi-chat-left-dots fs-1 text-success mb-2"></i>
                         <p class="mb-1 title-sm text-muted">Total Reviews</p>
-                        <h4 class="fw-bold m-0">234</h4>
+                        <h4 class="fw-bold m-0"><?php echo count($reviews); ?></h4>
                     </div>
                 </div>
             </div>
@@ -252,9 +240,3 @@
     }
     // Movie View Trend End
 </script>
-
-<!-- <script src="../assets/js/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script> -->
-<!-- </body>
-
-</html> -->

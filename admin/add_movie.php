@@ -1,29 +1,37 @@
 <?php
+session_start();
 require '../function.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = $_POST['title'];
-    $release_date = $_POST['release_date'];
-    $trailer_url = $_POST['trailer_url'];
-    $director_id = $_POST['director_id'];
-    $director_new = trim($_POST['director_new']);
-    $cast = $_POST['cast'];
-    $duration = $_POST['duration'];
-    $synopsis = $_POST['synopsis'];
+    // Escape semua input!
+    $title = mysqli_real_escape_string($conn, $_POST['title']);
+    $release_date = mysqli_real_escape_string($conn, $_POST['release_date']);
+    $trailer_url = mysqli_real_escape_string($conn, $_POST['trailer_url']);
+    $director_id = mysqli_real_escape_string($conn, $_POST['director_id']);
+    $director_new = mysqli_real_escape_string($conn, trim($_POST['director_new']));
+    $cast = mysqli_real_escape_string($conn, $_POST['cast']);
+    $duration = mysqli_real_escape_string($conn, $_POST['duration']);
+    $synopsis = mysqli_real_escape_string($conn, $_POST['synopsis']);
+
     // Proses upload poster jika ada
     $poster = '';
     if (!empty($_FILES['poster']['name'])) {
-        $poster = uniqid() . '_' . $_FILES['poster']['name'];
-        move_uploaded_file($_FILES['poster']['tmp_name'], '../assets/img/' . $poster);
+        $poster = uploadPoster('poster');
+        if (!$poster) {
+            $_SESSION['upload_error_add'] = 'Upload poster gagal! File harus JPG/PNG dan maksimal 2MB.';
+            $_SESSION['show_add_modal'] = true;
+            header('Location: index.php?page=movies');
+            exit;
+        }
     }
 
     // Jika tambah director baru
     if ($director_id === 'add_new' && $director_new !== '') {
-        mysqli_query($conn, "INSERT INTO director (name) VALUES ('" . mysqli_real_escape_string($conn, $director_new) . "')");
+        mysqli_query($conn, "INSERT INTO director (name) VALUES ('$director_new')");
         $director_id = mysqli_insert_id($conn);
     }
 
-    // Simpan ke database (contoh query, sesuaikan dengan struktur tabel kamu)
+    // Simpan ke database
     $query = "INSERT INTO movies (title, release_date, trailer_url, director_id, cast, duration, synopsis, poster)
               VALUES ('$title', '$release_date', '$trailer_url', '$director_id', '$cast', '$duration', '$synopsis', '$poster')";
     mysqli_query($conn, $query);

@@ -1,20 +1,29 @@
 <?php
+session_start();
 require '../function.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = intval($_POST['id']);
-    $title = $_POST['title'];
-    $release_date = $_POST['release_date'];
-    $duration = $_POST['duration'];
-    $trailer_url = $_POST['trailer_url'];
-    $cast = $_POST['cast'];
-    $synopsis = $_POST['synopsis'];
-    $director_id = $_POST['director_id'];
-    // Proses upload poster jika ada
+    // Escape semua input!
+    $title = mysqli_real_escape_string($conn, $_POST['title']);
+    $release_date = mysqli_real_escape_string($conn, $_POST['release_date']);
+    $duration = mysqli_real_escape_string($conn, $_POST['duration']);
+    $trailer_url = mysqli_real_escape_string($conn, $_POST['trailer_url']);
+    $cast = mysqli_real_escape_string($conn, $_POST['cast']);
+    $synopsis = mysqli_real_escape_string($conn, $_POST['synopsis']);
+    $director_id = mysqli_real_escape_string($conn, $_POST['director_id']);
+
+    // Proses upload poster
     $poster_sql = '';
     if (!empty($_FILES['poster']['name'])) {
-        $poster = uniqid() . '_' . $_FILES['poster']['name'];
-        move_uploaded_file($_FILES['poster']['tmp_name'], '../assets/img/' . $poster);
+        $poster = uploadPoster('poster');
+        if (!$poster) {
+            $_SESSION['upload_error_edit'] = 'Upload poster gagal! File harus JPG/PNG dan maksimal 2MB.';
+            $_SESSION['edit_movie_id'] = $_POST['id'];
+            header('Location: index.php?page=movies');
+            exit;
+        }
+        $poster = mysqli_real_escape_string($conn, $poster);
         $poster_sql = ", poster='$poster'";
     }
 
@@ -35,12 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_query($conn, "DELETE FROM movie_mood WHERE movie_id=$id");
     if (!empty($_POST['mood_ids'])) {
         foreach ($_POST['mood_ids'] as $mood_id) {
+            $mood_id = intval($mood_id);
             mysqli_query($conn, "INSERT INTO movie_mood (movie_id, mood_id) VALUES ($id, $mood_id)");
         }
     }
     mysqli_query($conn, "DELETE FROM movie_genre WHERE movie_id=$id");
     if (!empty($_POST['genre_ids'])) {
         foreach ($_POST['genre_ids'] as $genre_id) {
+            $genre_id = intval($genre_id);
             mysqli_query($conn, "INSERT INTO movie_genre (movie_id, genre_id) VALUES ($id, $genre_id)");
         }
     }

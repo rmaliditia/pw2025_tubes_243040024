@@ -1,6 +1,53 @@
 <?php
 // connect ke database
 $conn = mysqli_connect("localhost", "root", "", "moodflix_db");
+
+function uploadPoster($inputName = 'poster')
+{
+    $namaFile = $_FILES[$inputName]['name'];
+    $ukuranFile = $_FILES[$inputName]['size'];
+    $error = $_FILES[$inputName]['error'];
+    $tmpName = $_FILES[$inputName]['tmp_name'];
+
+    if ($error === 4) {
+        // echo "Tidak ada file diupload";
+        return false;
+    }
+
+    $ekstensiGambarValid = ['jpg', 'jpeg', 'png'];
+    $ekstensiGambar = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+    if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
+        // echo "Ekstensi tidak valid";
+        return false;
+    }
+
+    $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
+    $file_type = mime_content_type($tmpName);
+    if (!in_array($file_type, $allowed_types)) {
+        // echo "Tipe file tidak valid: $file_type";
+        return false;
+    }
+
+    if ($ukuranFile > 2000000) {
+        // echo "Ukuran file terlalu besar";
+        return false;
+    }
+
+    $namaFileBaru = uniqid() . '_' . $namaFile;
+    move_uploaded_file($tmpName, '../assets/img/' . $namaFileBaru);
+    return $namaFileBaru;
+}
+
+function deleteMovie($id)
+{
+    global $conn;
+    mysqli_query($conn, "DELETE FROM movies WHERE `movies`.`id` = $id");
+    return mysqli_affected_rows($conn);
+}
+
+
+
+
 function query($query)
 {
     global $conn;
@@ -36,12 +83,7 @@ function tambah($data)
     return mysqli_affected_rows($conn);
 }
 
-function hapus($id)
-{
-    global $conn;
-    mysqli_query($conn, "DELETE FROM mahasiswa WHERE id = $id");
-    return mysqli_affected_rows($conn);
-}
+
 
 
 function ubah($data)
@@ -88,66 +130,6 @@ function ubah($data)
 }
 
 
-function cari($keyword, $awalData = 0, $jumlahDataPerhalaman = 3)
-{
-    global $awalData, $jumlahDataPerhalaman;
-
-    $query = "SELECT * FROM mahasiswa
-    WHERE nama LIKE '%$keyword%'OR
-    nrp LIKE '%$keyword%' OR
-    email LIKE '%$keyword%' OR
-    jurusan LIKE '%$keyword%' LIMIT $awalData, $jumlahDataPerhalaman";
-    return query($query);
-}
-
-function upload()
-{
-    $namaFile = $_FILES['gambar']['name'];
-    $ukuranFile = $_FILES['gambar']['size'];
-    $error = $_FILES['gambar']['error'];
-    $tmpName = $_FILES['gambar']['tmp_name'];
-
-    // cek apakah tidak ada gambar yang diupload
-    if ($error === 4) {
-        echo "
-    <script>
-    alert('Pilih gambar terlebih dahulu!');
-    </script>
-    ";
-        return false;  // return false langsung jika tidak ada file
-    }
-
-    // cek apakah yang diupload adalah gambar
-    $ekstensiGambarValid = ['jpg', 'jpeg', 'png'];
-    $ekstensiGambar = explode('.', $namaFile);
-    $ekstensiGambar = strtolower(end($ekstensiGambar));
-    if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
-        echo "
-            <script>
-            alert('Yang anda upload bukan gambar!');
-            </script>
-            ";
-        return false;
-    }
-
-    // cek jika ukurannya terlalu besar
-    if ($ukuranFile > 1000000) {
-        echo "
-            <script>
-            alert('Ukuran gambar terlalu besar!');
-            </script>
-            ";
-        return false;
-    }
-
-    // lolos pengecekan, gambar siap diupload
-    // generate nama gambar baru
-    $namaFileBaru = uniqid();
-    $namaFileBaru .= '.';
-    $namaFileBaru .= $ekstensiGambar;
-    move_uploaded_file($tmpName, 'img/' . $namaFileBaru);
-    return $namaFileBaru;
-}
 
 
 function register($data)
@@ -184,7 +166,7 @@ function register($data)
     $password = password_hash($password, PASSWORD_DEFAULT);
 
     // tambahkan user baru ke database
-    $query = "INSERT INTO users VALUES(NULL, '$username', '$password', 'user')";
+    $query = "INSERT INTO users VALUES(NULL, '$username', '$password', 'user', '1000-10-10', NULL, NULL)";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
