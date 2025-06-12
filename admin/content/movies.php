@@ -1,45 +1,48 @@
-<!-- MOVIES CODE  -->
-<div class="container mt-4">
+<?php
+$directors = [];
+$result = mysqli_query($conn, "SELECT id, name FROM director ORDER BY name ASC");
+while ($row = mysqli_fetch_assoc($result)) {
+    $directors[] = $row;
+}
+
+$moods = [];
+$result = mysqli_query($conn, "SELECT id, name FROM moods ORDER BY name ASC");
+while ($row = mysqli_fetch_assoc($result)) {
+    $moods[] = $row;
+}
+
+$genres = [];
+$result = mysqli_query($conn, "SELECT id, name FROM genre ORDER BY name ASC");
+while ($row = mysqli_fetch_assoc($result)) {
+    $genres[] = $row;
+}
+?>
+
+<!-- MOVIES CODE -->
+<div class="container-fluid mt-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h4 class="fw-bold">Movie List</h4>
-        <a href="#" class="btn btn-outline-danger btn-sm">
+        <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#addMovieModal">
             <i class="bi bi-plus-circle me-2"></i>
             Add Movie
         </a>
     </div>
-    <!-- Controls -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-        <div class="d-flex gap-2 mb-2 mb-md-0">
-            <a href="#" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-filter me-2"></i>Filter
-            </a>
-            <!-- <a href="#" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-sort-alpha-down me-2"></i>Sort By
-            </a> -->
-            <a href="#" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-download me-2"></i>Export
-            </a>
-        </div>
-        <!-- <form class="d-flex w-25" role="search">
-            <input class="form-control form-control" type="search" placeholder="Search" aria-label="Search" />
-        </form> -->
-    </div>
 
     <!-- Table -->
-    <div class="table-responsive shadow-sm border rounded bg-white pb-3">
+    <div class="table-responsive shadow-sm border rounded bg-white">
         <?php if (count($movies) > 0) : ?>
-            <table class="table table-hover align-middle mb-0 table-movies table-striped" id="datatables">
-                <thead class="table-light">
+            <table class="table table-bordered align-middle mb-0 table-movies" id="example">
+                <thead class="">
                     <tr>
-                        <th scope="col" style="width: 5%;">No</th>
+                        <th scope="col" style="width: 5%">No</th>
                         <th scope="col" style="width: 20%;">Title</th>
-                        <th scope="col" style="width: 15%;">Mood</th>
-                        <th scope="col" style="width: 15%;">Release Date</th>
-                        <th scope="col" style="width: 15%;">Trailer</th>
-                        <th scope="col" style="width: 10%;">Ratings</th>
-                        <th scope="col" style="width: 10%;">Statistics</th>
-                        <th scope="col" style="width: 10%;">Details</th>
+                        <th scope="col" style="width: 17%;">Mood</th>
+                        <th scope="col" style="width: 12%;">Release Date</th>
+                        <th scope="col" style="width: 18%;">Trailer</th>
+                        <th scope="col" style="width: 8%;">Ratings</th>
+                        <th scope="col" style="width: 15%;">Statistics</th>
+                        <th scope="col" style="width: 5%;">Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +71,7 @@
                                 <span class="badge bg-info">
                                     <i class="bi bi-eye-fill"></i> <?php echo htmlspecialchars($movie["watch_count"]); ?>
                                 </span>
+                                <span class="d-print-inline d-none">|</span>
                                 <span class="badge bg-danger">
                                     <i class="bi bi-heart-fill"></i> <?php echo htmlspecialchars($movie["like_count"]); ?>
                                 </span>
@@ -92,27 +96,6 @@
             </div>
         <?php endif; ?>
 
-        <!-- Pagination -->
-        <!-- <div class="d-flex justify-content-between align-items-center mt-3 px-3 flex-wrap">
-                <p class="text-muted mb-0">Showing 15 of <?php echo count($movies); ?></p>
-                <nav>
-                    <ul class="pagination mb-0 d-flex gap-4">
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <i class="bi bi-caret-left-square-fill"></i>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link text-muted" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link text-muted" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link text-muted" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <i class="bi bi-caret-right-square-fill"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div> -->
     </div>
 </div>
 
@@ -164,7 +147,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-4 ps-0"><strong>Cast:</strong></div>
-                            <div class="col-8 casts"></div>
+                            <div class="col-8 cast"></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-4 ps-0"><strong>Statistics:</strong></div>
@@ -190,6 +173,83 @@
                 </button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Add Movie Modal -->
+<div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;max-height: 80vh;">
+        <form action="add_movie.php" method="post" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header bg-danger text-white py-2">
+                <h6 class="modal-title" id="addMovieModalLabel"><i class="bi bi-plus-circle me-2"></i>Tambah Movie</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <label class="form-label mb-1">Title</label>
+                        <input type="text" name="title" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Release Date</label>
+                        <input type="date" name="release_date" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Duration (min)</label>
+                        <input type="number" name="duration" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Trailer URL</label>
+                        <input type="url" name="trailer_url" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Mood</label>
+                        <select name="mood_ids[]" class="form-select form-select-sm" multiple required>
+                            <?php foreach ($moods as $m): ?>
+                                <option value="<?= $m['id']; ?>"><?= htmlspecialchars($m['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted">Tekan Ctrl (atau Cmd di Mac) untuk memilih lebih dari satu.</small>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Genre</label>
+                        <select name="genre_ids[]" class="form-select form-select-sm" multiple required>
+                            <?php foreach ($genres as $g): ?>
+                                <option value="<?= $g['id']; ?>"><?= htmlspecialchars($g['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted">Tekan Ctrl (atau Cmd di Mac) untuk memilih lebih dari satu.</small>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Poster</label>
+                        <input type="file" name="poster" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Director</label>
+                        <select name="director_id" id="directorSelect" class="form-select form-select-sm" required>
+                            <option value="">-- Pilih Director --</option>
+                            <?php foreach ($directors as $d): ?>
+                                <option value="<?= $d['id']; ?>"><?= htmlspecialchars($d['name']); ?></option>
+                            <?php endforeach; ?>
+                            <option value="add_new">+ Tambah director baru...</option>
+                        </select>
+                        <input type="text" name="director_new" id="directorNewInput" class="form-control form-control-sm mt-2 d-none" placeholder="Nama director baru">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Cast</label>
+                        <input type="text" name="cast" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Synopsis</label>
+                        <textarea name="synopsis" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-danger btn-sm">Simpan</button>
+            </div>
+        </form>
     </div>
 </div>
 <!-- MOVIES CODE END -->

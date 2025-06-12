@@ -11,6 +11,7 @@ SELECT
     m.trailer_url,
     m.release_date,
     m.synopsis,
+    m.cast,
     m.duration,
     m.rating,
     m.watch_count,
@@ -28,7 +29,6 @@ $movie['poster'] = $movie['poster'] ? '../assets/img/' . $movie['poster'] : '../
 // Ambil moods, genre, casts
 $moods = [];
 $genres = [];
-$casts = [];
 
 $res = mysqli_query($conn, "SELECT md.name FROM movie_mood mm JOIN moods md ON md.id = mm.mood_id WHERE mm.movie_id = $id");
 while ($row = mysqli_fetch_assoc($res)) $moods[] = $row['name'];
@@ -36,12 +36,9 @@ while ($row = mysqli_fetch_assoc($res)) $moods[] = $row['name'];
 $res = mysqli_query($conn, "SELECT g.name FROM movie_genre mg JOIN genre g ON g.id = mg.genre_id WHERE mg.movie_id = $id");
 while ($row = mysqli_fetch_assoc($res)) $genres[] = $row['name'];
 
-$res = mysqli_query($conn, "SELECT a.name FROM casts mc JOIN actors a ON a.id = mc.actor_id WHERE mc.movie_id = $id");
-while ($row = mysqli_fetch_assoc($res)) $casts[] = $row['name'];
 
 $movie['moods'] = $moods;
 $movie['genres'] = $genres;
-$movie['casts'] = $casts;
 
 header('Content-Type: application/json');
 echo json_encode($movie);

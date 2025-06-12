@@ -16,9 +16,9 @@ textarea {
   margin-right: 0 !important;
 }
 
-/* Mengatur card utama (bisa kamu bungkus kontennya dengan container jika mau) */
 .table-movies {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
+  border-radius: 5px !important;
 }
 
 .card .logo {
@@ -85,6 +85,11 @@ textarea {
   margin: 11px 0px -3px 0px;
 } */
 
+.form-control:focus {
+  box-shadow: none !important;
+  border-color: #dc3545 !important;
+}
+
 .search-header {
   margin: 11px 0px -3px 0px;
 }
@@ -107,25 +112,39 @@ textarea {
 }
 
 .table-movies thead tr th {
+  text-align: center !important;
   font-weight: 500;
 }
 
 .table-movies tbody tr td {
+  text-align: center !important;
   font-size: 1rem;
+}
+
+.table-movies td a {
+  color: #dc3545 !important;
+  text-decoration: underline !important;
+  text-decoration-color: #dc3545 !important; /* underline merah */
+}
+
+.table-movies tbody tr td a small {
+  text-decoration: underline !important;
+  text-decoration-color: #dc3545 !important; /* underline merah */
+  color: #dc3545 !important;
 }
 
 .table-movies thead tr th,
 .table-movies tbody tr td {
   text-align: center;
+  vertical-align: middle !important;
 }
 
 .text-wrap {
   white-space: normal !important;
-  word-wrap: break-word;
 }
 
-.table-movies td {
-  white-space: nowrap;
+.dt-column-order {
+  display: none !important;
 }
 
 /* CSS USERS */
@@ -140,22 +159,93 @@ textarea {
   color: #dc3545 !important;
 }
 
-/* CSS PAGINATION */
-.pagination .page-item .page-link {
-  border: none !important;
-  background-color: transparent !important;
-  padding: 0.1rem 0.4rem !important;
+/* CSS TABLE MOVIES(DATATABLES) */
+
+.datatables-top-menu {
+  padding: 10px 16px 10px 16px;
 }
 
-/* Tambahkan gaya khusus untuk panah kiri dan kanan */
-.pagination .page-item:first-child .page-link,
-.pagination .page-item:last-child .page-link {
+.datatables-bottom-menu {
+  padding: 4px 16px 4px 16px;
+}
+
+.dt-buttons .dt-button,
+.dt-buttons .dt-button:focus,
+.dt-buttons .dt-button:active {
+  background: #fff !important;
+  color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+  border-radius: 5px !important;
+  padding: 4px 12px !important;
+  margin: 0 2px !important;
+  box-shadow: none !important;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 500;
+}
+
+.dt-buttons .dt-button:hover,
+.dt-buttons .dt-button:focus-visible,
+.dt-buttons .dt-button:active {
+  background: #dc3545 !important;
+  color: #fff !important;
+  border: 1px solid #dc3545 !important;
+}
+
+div.dt-container div.dt-search {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+}
+
+.dt-search label {
+  display: none !important;
+}
+
+div.dt-container div.dt-search input {
+  width: 300px !important;
+}
+
+/* DataTables search input style */
+.dataTables_filter input[type="search"] {
+  border-radius: 8px !important;
+  border: 1px solid #dc3545 !important;
+  padding: 0.5rem 1rem !important;
+  margin-left: 0.5rem !important;
+  max-width: 250px !important;
+}
+
+/* DataTables pagination style */
+.pagination {
+  border-radius: 0px !important;
+  border-color: #dc3545 !important;
+}
+
+.pagination .page-item .page-link:focus,
+.dt-length select:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.25rem transparent !important;
+  outline: none !important;
+}
+
+.pagination .page-item button {
   color: #dc3545 !important;
 }
 
-/* .modal-body .row {
-  margin-bottom: 1rem;
-} */
+.pagination .active button {
+  background-color: #dc3545 !important;
+  border: 0.5px solid #dc3545 !important;
+  color: #fff !important;
+}
+
+.pagination .disabled button {
+  opacity: 30% !important;
+}
+
+div.dt-container .dt-paging .dt-paging-button {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
 
 .movie-poster {
   max-width: 100%;
@@ -175,4 +265,17 @@ textarea {
 .modal-body,
 .modal-content {
   font-size: 0.8rem !important;
+}
+
+.dt-length select option {
+  color: #dc3545 !important;
+  background-color: #fff !important;
+}
+
+.dataTables_length select option:hover,
+.form-select option:checked,
+.form-select option:focus,
+.form-select option:hover {
+  color: #fff !important;
+  background-color: #dc3545 !important;
 }

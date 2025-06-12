@@ -20,14 +20,14 @@ SELECT
     m.trailer_url,
     m.release_date,
     m.synopsis,
+    m.cast,
     m.duration,
     m.rating,
     m.watch_count,
     m.like_count,
     d.name AS director,
     md.name AS mood,
-    g.name AS genre,
-    a.name AS cast
+    g.name AS genre
 FROM movies m
 
 LEFT JOIN director d ON m.director_id = d.id    
@@ -37,9 +37,6 @@ LEFT JOIN moods md ON md.id = mm.mood_id
 
 LEFT JOIN movie_genre mg ON m.id = mg.movie_id
 LEFT JOIN genre g ON g.id = mg.genre_id
-
-LEFT JOIN casts mc ON m.id = mc.movie_id
-LEFT JOIN actors a ON a.id = mc.actor_id
 
 ORDER BY m.id;
 ";
@@ -61,6 +58,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             'trailer_url' => $row['trailer_url'],
             'release_date' => $row['release_date'],
             'synopsis' => $row['synopsis'],
+            'cast' => $row['cast'],
             'duration' => $row['duration'],
             'rating' => $row['rating'],
             'watch_count' => $row['watch_count'],
@@ -68,7 +66,6 @@ while ($row = mysqli_fetch_assoc($result)) {
             'director' => $row['director'],
             'moods' => [],
             'genre' => [],
-            'casts' => []
         ];
     }
 
@@ -78,10 +75,6 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     if ($row['genre'] && !in_array($row['genre'], $movies[$id]['genre'])) {
         $movies[$id]['genre'][] = $row['genre'];
-    }
-
-    if ($row['cast'] && !in_array($row['cast'], $movies[$id]['casts'])) {
-        $movies[$id]['casts'][] = $row['cast'];
     }
 }
 
@@ -93,14 +86,25 @@ while ($row = mysqli_fetch_assoc($result)) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Panel | Moodflix</title>
+    <title><?php
+            if (isset($_GET['page'])) {
+                echo ucwords($_GET['page']);
+            } else {
+                echo 'Dashboard';
+            }
+            ?> | Moodflix</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body class="">
@@ -148,7 +152,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                         <i class="bi bi-envelope fs-5"></i>
                     </div>
                     <div class="dropdown">
-                        <a href="" class="d-flex align-items-center text-secondary text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="d-flex align-items-center text-secondary text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                            onclick="event.preventDefault();">
                             <img src="../assets/img/nophoto.jpg" alt="profile" width="32" height="32" class="rounded-circle me-2">
                             <div class="d-flex flex-column">
                                 <strong class="profile-name m-0">
@@ -187,8 +192,6 @@ while ($row = mysqli_fetch_assoc($result)) {
     <!-- MY JS -->
     <script src="../assets/js/script.js"></script>
 
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- DATA MODAL/MOVIE JS -->
     <script>
@@ -213,8 +216,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                         document.querySelector('#movieDetailModal .modal-body .trailer p').textContent = data.trailer_url;
                         document.querySelector('#movieDetailModal .modal-body .duration').textContent = data.duration + ' minutes';
                         document.querySelector('#movieDetailModal .modal-body .release-date').textContent = data.release_date;
-                        document.querySelector('#movieDetailModal .modal-body .casts').textContent = data.casts.join(', ');
                         document.querySelector('#movieDetailModal .modal-body .synopsis').textContent = data.synopsis;
+                        document.querySelector('#movieDetailModal .modal-body .cast').textContent = data.cast;
                         let moodHtml = '';
                         data.moods.forEach(m => moodHtml += `<span class="badge bg-danger me-1">${m}</span>`);
                         document.querySelector('#movieDetailModal .modal-body .moods').innerHTML = moodHtml;
@@ -229,16 +232,110 @@ while ($row = mysqli_fetch_assoc($result)) {
         });
     </script>
 
-    <!-- DATATABLES BOOTSTRAP 5 -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
+    <!-- INPUT DIRECTOR JS -->
     <script>
-        $(document).ready(function() {
-            $('#datatables').DataTable();
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('directorSelect');
+            const input = document.getElementById('directorNewInput');
+            if (select) {
+                select.addEventListener('change', function() {
+                    if (this.value === 'add_new') {
+                        input.classList.remove('d-none');
+                        input.required = true;
+                    } else {
+                        input.classList.add('d-none');
+                        input.required = false;
+                    }
+                });
+            }
         });
     </script>
+
+
+    <!-- DATATABLES BOOTSTRAP 5 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#example').DataTable({
+                dom: '<"d-flex justify-content-between align-items-center datatables-top-menu"lfB>rt<"d-flex justify-content-between align-items-center datatables-bottom-menu"ip>',
+                buttons: [{
+                    extend: 'print',
+                    text: '<i class="bi bi-printer me-2"></i>Print',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    },
+                    customize: function(win) {
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css({
+                                'font-size': 'inherit',
+                                'border': '1px solid #000'
+                            });
+                        $(win.document.body).find('thead').css({
+                            'background-color': '#dc3545',
+                            'color': '#fff'
+                        });
+                    }
+                }],
+                responsive: true,
+                language: {
+                    lengthMenu: "Show&nbsp; _MENU_ movies per page",
+                    search: "",
+                    searchPlaceholder: "Search movies..."
+                },
+                lengthMenu: [5, 10, 20, 50, -1],
+                columns: [{
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        orderable: false,
+                        searchable: false
+                    } // kolom detail (tidak di-print)
+                ],
+                order: [
+                    [0, 'asc']
+                ]
+            });
+        });
+    </script>
+
 </body>
 
 </html>
