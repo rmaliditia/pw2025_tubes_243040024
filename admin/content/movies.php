@@ -100,7 +100,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 </div>
 
 
-<!-- Movie Detail Modal -->
+<!-- Detail Movie Modal -->
 <div class="modal fade" id="movieDetailModal" tabindex="-1" aria-labelledby="movieDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -168,20 +168,22 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
-                <button type="button" class="btn btn-danger">
+                <button class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#editMovieModal">
                     <i class="bi bi-pencil-square me-2"></i>Edit Movie
                 </button>
             </div>
         </div>
     </div>
 </div>
+<!-- Detail Movie Modal -->
 
 <!-- Add Movie Modal -->
 <div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width: 600px;max-height: 80vh;">
         <form action="add_movie.php" method="post" enctype="multipart/form-data" class="modal-content">
             <div class="modal-header bg-danger text-white py-2">
-                <h6 class="modal-title" id="addMovieModalLabel"><i class="bi bi-plus-circle me-2"></i>Tambah Movie</h6>
+                <h6 class="modal-title" id="addMovieModalLabel"><i class="bi bi-plus-circle me-2"></i>Add Movie</h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-3">
@@ -209,7 +211,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 <option value="<?= $m['id']; ?>"><?= htmlspecialchars($m['name']); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <small class="text-muted">Tekan Ctrl (atau Cmd di Mac) untuk memilih lebih dari satu.</small>
+                        <small class="text-muted">Tekan Ctrl (Cmd di Mac) untuk memilih lebih dari satu.</small>
                     </div>
                     <div class="col-6">
                         <label class="form-label mb-1">Genre</label>
@@ -218,7 +220,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 <option value="<?= $g['id']; ?>"><?= htmlspecialchars($g['name']); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <small class="text-muted">Tekan Ctrl (atau Cmd di Mac) untuk memilih lebih dari satu.</small>
+                        <small class="text-muted">Tekan Ctrl (Cmd di Mac) untuk memilih lebih dari satu.</small>
                     </div>
                     <div class="col-6">
                         <label class="form-label mb-1">Poster</label>
@@ -252,4 +254,85 @@ while ($row = mysqli_fetch_assoc($result)) {
         </form>
     </div>
 </div>
+<!-- Add Movie Modal -->
+
+
+<!-- Edit Movie Modal -->
+<div class="modal fade" id="editMovieModal" tabindex="-1" aria-labelledby="editMovieModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;max-height: 80vh;">
+        <form action="edit_movie.php" method="post" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header bg-danger text-white py-2">
+                <input type="hidden" name="id">
+                <h6 class="modal-title" id="editMovieModalLabel"><i class="bi bi-pencil me-2"></i>Edit Movie</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <label class="form-label mb-1">Title</label>
+                        <input type="text" name="title" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Release Date</label>
+                        <input type="date" name="release_date" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Duration (min)</label>
+                        <input type="number" name="duration" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Trailer URL</label>
+                        <input type="url" name="trailer_url" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Mood</label>
+                        <select name="mood_ids[]" class="form-select form-select-sm" multiple required>
+                            <?php foreach ($moods as $m): ?>
+                                <option value="<?= $m['id']; ?>"><?= htmlspecialchars($m['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted">Tekan Ctrl (Cmd di Mac) untuk memilih lebih dari satu.</small>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Genre</label>
+                        <select name="genre_ids[]" class="form-select form-select-sm" multiple required>
+                            <?php foreach ($genres as $g): ?>
+                                <option value="<?= $g['id']; ?>"><?= htmlspecialchars($g['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted">Tekan Ctrl (Cmd di Mac) untuk memilih lebih dari satu.</small>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Poster</label>
+                        <input type="file" name="poster" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1">Director</label>
+                        <select name="director_id" id="directorSelect" class="form-select form-select-sm" required>
+                            <option value="">-- Pilih Director --</option>
+                            <?php foreach ($directors as $d): ?>
+                                <option value="<?= $d['id']; ?>"><?= htmlspecialchars($d['name']); ?></option>
+                            <?php endforeach; ?>
+                            <option value="add_new">+ Tambah director baru...</option>
+                        </select>
+                        <input type="text" name="director_new" id="directorNewInput" class="form-control form-control-sm mt-2 d-none" placeholder="Nama director baru">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Cast</label>
+                        <input type="text" name="cast" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label mb-1">Synopsis</label>
+                        <textarea name="synopsis" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-danger btn-sm">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Edit Movie Modal -->
 <!-- MOVIES CODE END -->

@@ -208,6 +208,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     .then(res => res.json())
                     .then(data => {
                         // Selector modal
+                        document.getElementById('movieDetailModal').setAttribute('data-id', id);
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').src = data.poster;
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').alt = data.title + ' Poster';
                         document.querySelector('#movieDetailModal .modal-body h3').textContent = data.title;
