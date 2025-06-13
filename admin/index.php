@@ -219,7 +219,6 @@ while ($row = mysqli_fetch_assoc($result)) {
     <!-- MY JS -->
     <script src="../assets/js/script.js"></script>
 
-
     <!-- DATA MODAL/MOVIE JS -->
     <script>
         document.addEventListener('click', function(e) {

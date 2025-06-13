@@ -59,114 +59,60 @@ function query($query)
     return $rows;
 }
 
-
-function tambah($data)
+function getMovieDetail($conn, $id)
 {
-    global $conn;
-    $nrp = htmlspecialchars($data["nrp"]);
-    $nama = htmlspecialchars($data["nama"]);
-    $email = htmlspecialchars($data["email"]);
-    $jurusan = htmlspecialchars($data["jurusan"]);
+    $id = intval($id);
+    $query = "
+        SELECT 
+            m.poster,
+            m.id,
+            m.title,
+            m.director_id,
+            m.trailer_url,
+            m.release_date,
+            m.synopsis,
+            m.cast,
+            m.duration,
+            m.rating,
+            m.watch_count,
+            m.like_count,
+            d.name AS director
+        FROM movies m
+        LEFT JOIN director d ON m.director_id = d.id
+        WHERE m.id = $id
+        LIMIT 1
+    ";
+    $result = mysqli_query($conn, $query);
+    $movie = mysqli_fetch_assoc($result);
 
-    // upload gambar
-    $gambar = upload();
-    if (!$gambar) {
-        return false;
-    }
+    $movie['poster'] = $movie['poster'] ? '../assets/img/' . $movie['poster'] : '../assets/img/nophoto.jpg';
 
-    $gambar = htmlspecialchars($data["gambar"]);
+    // Ambil moods, genre, casts
+    $moods = [];
+    $genres = [];
+    $mood_ids = [];
+    $genre_ids = [];
 
-    $query = "INSERT INTO mahasiswa (nama, nrp, email, jurusan, gambar)
-          VALUES ('$nama', '$nrp', '$email', '$jurusan', '$gambar')";
-    mysqli_query($conn, $query);
+    $res = mysqli_query($conn, "SELECT md.name FROM movie_mood mm JOIN moods md ON md.id = mm.mood_id WHERE mm.movie_id = $id");
+    while ($row = mysqli_fetch_assoc($res)) $moods[] = $row['name'];
 
-    return mysqli_affected_rows($conn);
+    $res = mysqli_query($conn, "SELECT g.name FROM movie_genre mg JOIN genre g ON g.id = mg.genre_id WHERE mg.movie_id = $id");
+    while ($row = mysqli_fetch_assoc($res)) $genres[] = $row['name'];
+
+    $res = mysqli_query($conn, "SELECT md.id FROM movie_mood mm JOIN moods md ON md.id = mm.mood_id WHERE mm.movie_id = $id");
+    while ($row = mysqli_fetch_assoc($res)) $mood_ids[] = $row['id'];
+
+    $res = mysqli_query($conn, "SELECT g.id FROM movie_genre mg JOIN genre g ON g.id = mg.genre_id WHERE mg.movie_id = $id");
+    while ($row = mysqli_fetch_assoc($res)) $genre_ids[] = $row['id'];
+
+    $movie['moods'] = $moods;
+    $movie['genres'] = $genres;
+    $movie['mood_ids'] = $mood_ids;
+    $movie['genre_ids'] = $genre_ids;
+
+    return $movie;
 }
 
-
-
-
-function ubah($data)
-{
-    global $conn;
-
-    $id = $data["id"];
-    $nrp = htmlspecialchars($data["nrp"]);
-    $nama = htmlspecialchars($data["nama"]);
-    $email = htmlspecialchars($data["email"]);
-    $jurusan = htmlspecialchars($data["jurusan"]);
-    $gambarLama = htmlspecialchars($data["gambarLama"]);
-
-    // Cek apakah user pilih gambar baru atau tidak
-    if ($_FILES['gambar']['error'] === 4) {
-        $gambar = $gambarLama; // Gunakan gambar lama jika tidak ada upload baru
-    } else {
-        // Jika ada gambar baru diupload
-        $gambar = upload();
-
-        // Jika upload gagal, kembalikan false
-        if (!$gambar) {
-            return false;
-        }
-
-        // Hapus file gambar lama jika berhasil upload gambar baru
-        // dan gambarLama bukan gambar default
-        if ($gambarLama != 'default.jpg' && file_exists('img/' . $gambarLama)) {
-            unlink('img/' . $gambarLama);
-        }
-    }
-
-    // $gambar = htmlspecialchars($data["gambar"]);
-
-    $query = "UPDATE mahasiswa SET
-            nama = '$nama',
-            nrp = '$nrp',
-            email = '$email',
-            jurusan = '$jurusan',
-            gambar = '$gambar' WHERE id = $id";
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
-}
-
-
-
-
-function register($data)
-{
-    global $conn;
-    $username = strtolower(stripslashes($data["username"]));
-    $password = mysqli_real_escape_string($conn, $data["password"]);
-    $password2 = mysqli_real_escape_string($conn, $data["password2"]);
-
-    // cek username sudah ada atau belum
-    $result = mysqli_query($conn, "SELECT username FROM users
-    WHERE username = '$username'");
-
-    if (mysqli_fetch_assoc($result)) {
-        echo "
-        <script>
-        alert('Username sudah terdaftar!');
-        </script>
-        ";
-        return false;
-    }
-
-    // cek konfirmasi password
-    if ($password !== $password2) {
-        echo "
-        <script>
-        alert('Konfirmasi password tidak sesuai!');
-        </script>
-        ";
-        return false;
-    }
-
-    // enskripsi password
-    $password = password_hash($password, PASSWORD_DEFAULT);
-
-    // tambahkan user baru ke database
-    $query = "INSERT INTO users VALUES(NULL, '$username', '$password', 'user', '1000-10-10', NULL, NULL)";
-    mysqli_query($conn, $query);
-    return mysqli_affected_rows($conn);
-}
+// CARA PENGGUNAAN DI HALAMAN LAIN
+// $movie = getMovieDetail($conn, $id);
+// lalu tampilkan data movie di halaman

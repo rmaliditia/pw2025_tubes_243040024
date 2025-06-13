@@ -3,7 +3,7 @@ session_start();
 require '../function.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Escape semua input!
+    // Escape semua input
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $release_date = mysqli_real_escape_string($conn, $_POST['release_date']);
     $trailer_url = mysqli_real_escape_string($conn, $_POST['trailer_url']);
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $duration = mysqli_real_escape_string($conn, $_POST['duration']);
     $synopsis = mysqli_real_escape_string($conn, $_POST['synopsis']);
 
-    // Proses upload poster jika ada
+    // upload poster
     $poster = '';
     if (!empty($_FILES['poster']['name'])) {
         $poster = uploadPoster('poster');

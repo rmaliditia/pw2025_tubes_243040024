@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require '../function.php';
 
 // Cek session setelah login berhasil
@@ -29,7 +30,7 @@ if (isset($_POST['login'])) {
             $_SESSION['login'] = true;
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
-
+            $_SESSION['user_id'] = $row['id'];
             // Redirect sesuai role
             if ($row["role"] === 'admin') {
                 header("Location: ../admin/index.php");
