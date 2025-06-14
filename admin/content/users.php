@@ -17,10 +17,6 @@
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h4 class="fw-bold">User List</h4>
-            <!-- <a href="#" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-plus-circle me-2"></i>
-                Add Movie
-            </a> -->
         </div>
 
         <!-- Table -->
@@ -79,9 +75,7 @@
                     <p class="mb-0 text-center text-muted">Tidak ada data yang ditemukan.</p>
                 </div>
             <?php endif; ?>
-
         </div>
-
     </div>
 </body>
 

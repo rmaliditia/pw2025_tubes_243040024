@@ -234,7 +234,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                     .then(res => res.json())
                     .then(data => {
                         // Selector modal
-                        // ...setelah data movie detail di-fetch...
                         document.querySelector('#movieDetailModal .btn-outline-danger[role="button"]').href = 'delete-movie.php?id=' + data.id;
                         document.getElementById('movieDetailModal').setAttribute('data-id', id);
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').src = data.poster;

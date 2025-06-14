@@ -142,39 +142,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="row gx-0">
-        <div class="align-items-center pt-3 pb-3">
-            <h4 class="fw-bold table-title">Top Active Users</h4>
-        </div>
-        <div class=" shadow-sm border border-1">
-
-
-            <table class="table table-top-users align-middle">
-                <thead>
-                    <tr>
-                        <th class="text-muted" scope="col">Photo</th>
-                        <th class="text-muted" scope="col">Name</th>
-                        <th class="text-muted" scope="col" class="">Watches</th>
-                        <th class="text-muted" scope="col" class="">Ratings</th>
-                        <th class="text-muted" scope="col" class="">Reviews</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <img src="../assets/img/nophoto.jpg" alt="profile" width="40" height="40" class="rounded-circle shadow-sm">
-                        </td>
-                        <td class="">Mark</td>
-                        <td class="">10</td>
-                        <td class="">5</td>
-                        <td class="">3</td>
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
-    </div> -->
 <script>
     // Movie VIew Trend Start
     const ctx = document.getElementById('myChart');
@@ -186,7 +153,7 @@
                 datasets: [{
                     label: 'Views',
                     data: [100, 190, 130, 150, 120, 230, 170, 180, 150, 160, 190, 210],
-                    borderColor: 'rgba(220, 53, 69, 1)', // Bootstrap danger color
+                    borderColor: 'rgba(220, 53, 69, 1)',
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
                     tension: 0.3, // Smoother lines
                     fill: true,
@@ -231,7 +198,7 @@
                         cornerRadius: 3
                     }
                 },
-                interaction: { // For better hover effects
+                interaction: { // Data muncul saat hover
                     mode: 'index',
                     intersect: false,
                 },
