@@ -2,6 +2,50 @@
 // connect ke database
 $conn = mysqli_connect("localhost", "root", "", "moodflix_db");
 
+function register($data)
+{
+    global $conn;
+    $username = strtolower(stripslashes($data["username"]));
+    $password = mysqli_real_escape_string($conn, $data["password"]);
+    $password2 = mysqli_real_escape_string($conn, $data["password2"]);
+
+    // cek username sudah ada atau belum
+    $result = mysqli_query($conn, "SELECT username FROM users
+    WHERE username = '$username'");
+
+    if (mysqli_fetch_assoc($result)) {
+        echo "
+        <script>
+        alert('Username sudah terdaftar!');
+        </script>
+        ";
+        return false;
+    }
+
+    // cek konfirmasi password
+    if ($password !== $password2) {
+        echo "
+        <script>
+        alert('Konfirmasi password tidak sesuai!');
+        </script>
+        ";
+        return false;
+    }
+
+    // enskripsi password
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
+    // tambahkan user baru ke database
+    $query = "INSERT INTO users 
+    (photo, username, password, role, created_at, watches, likes) 
+    VALUES 
+    (NULL, '$username', '$password', 'user', NOW(), 0, 0)";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+
+
 function uploadPoster($inputName = 'poster')
 {
     $namaFile = $_FILES[$inputName]['name'];
@@ -38,14 +82,13 @@ function uploadPoster($inputName = 'poster')
     return $namaFileBaru;
 }
 
+
 function deleteMovie($id)
 {
     global $conn;
     mysqli_query($conn, "DELETE FROM movies WHERE `movies`.`id` = $id");
     return mysqli_affected_rows($conn);
 }
-
-
 
 
 function query($query)
@@ -58,6 +101,7 @@ function query($query)
     }
     return $rows;
 }
+
 
 function getMovieDetail($conn, $id)
 {
@@ -112,7 +156,14 @@ function getMovieDetail($conn, $id)
 
     return $movie;
 }
-
 // CARA PENGGUNAAN DI HALAMAN LAIN
 // $movie = getMovieDetail($conn, $id);
 // lalu tampilkan data movie di halaman
+
+
+function deleteUser($id)
+{
+    global $conn;
+    mysqli_query($conn, "DELETE FROM users WHERE id = $id");
+    return mysqli_affected_rows($conn);
+}

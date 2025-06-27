@@ -168,7 +168,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
                 <a href="delete-movie.php?id=<?= htmlspecialchars($movie['id']); ?>" role="button" class="btn btn-outline-danger" onclick="return confirm('Yakin ingin menghapus movie ini?');">
-                    <i class="bi bi-x-circle me-2"></i>Delete
+                    <i class="bi bi-trash me-2"></i>Delete
                 </a>
                 <button class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#editMovieModal">

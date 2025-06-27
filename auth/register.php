@@ -6,7 +6,7 @@ if (isset($_POST['register'])) {
         echo "<script>
                 alert('User baru berhasil ditambahkan');
             </script>";
-        header("Location: ../auth/login.php");
+        header("Location: ../index.php");
     } else {
         echo mysqli_error($conn);
     }
@@ -50,7 +50,7 @@ if (isset($_POST['register'])) {
                         </div>
                         <button type="submit" name="register" class="btn btn-danger w-100 mb-2">Register</button>
                         <div class="form-text">
-                            Already have an account? <a href="login.php">Log In</a>
+                            Already have an account? <a href="../index.php">Log In</a>
                         </div>
                     </form>
                 </div>

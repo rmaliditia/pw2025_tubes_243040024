@@ -58,9 +58,6 @@
                                 <td class="text-wrap"><?php echo htmlspecialchars($user["likes"]); ?></td>
                                 <td class="text-wrap">0</td>
                                 <td class="text-wrap">
-                                    <a href="edit_user.php?id=<?php echo htmlspecialchars($user["id"]); ?>" class="btn btn-sm btn-detail fs-5">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
                                     <a href="delete_user.php?id=<?php echo htmlspecialchars($user["id"]); ?>" class="btn btn-sm btn-detail fs-5" onclick="return confirm('Are you sure you want to delete this user?');">
                                         <i class="bi bi-trash"></i>
                                     </a>

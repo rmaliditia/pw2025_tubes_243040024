@@ -1,51 +1,51 @@
-<?php
-session_start();
+<!-- <?php
+        session_start();
 
-require '../function.php';
+        require '../function.php';
 
-// Cek session setelah login berhasil
-if (isset($_SESSION["login"])) {
-    if ($_SESSION["role"] === 'admin') {
-        header("Location: ../admin/index.php");
-    } else {
-        header("Location: ../user/home.php");
-    }
-    exit;
-}
-
-$error = false;
-
-if (isset($_POST['login'])) {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    $username = htmlspecialchars($username); // Cegah XSS
-
-    $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
-
-    if ($result && mysqli_num_rows($result) === 1) {
-        $row = mysqli_fetch_assoc($result);
-
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['login'] = true;
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['role'] = $row['role'];
-            $_SESSION['user_id'] = $row['id'];
-            // Redirect sesuai role
-            if ($row["role"] === 'admin') {
+        // Cek session setelah login berhasil
+        if (isset($_SESSION["login"])) {
+            if ($_SESSION["role"] === 'admin') {
                 header("Location: ../admin/index.php");
             } else {
                 header("Location: ../user/home.php");
             }
             exit;
-        } else {
-            $error = true;
         }
-    } else {
-        $error = true;
-    }
-}
-?>
+
+        $error = false;
+
+        if (isset($_POST['login'])) {
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
+
+            $username = htmlspecialchars($username); // Cegah XSS
+
+            $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+
+            if ($result && mysqli_num_rows($result) === 1) {
+                $row = mysqli_fetch_assoc($result);
+
+                if (password_verify($password, $row['password'])) {
+                    $_SESSION['login'] = true;
+                    $_SESSION['username'] = $row['username'];
+                    $_SESSION['role'] = $row['role'];
+                    $_SESSION['user_id'] = $row['id'];
+                    // Redirect sesuai role
+                    if ($row["role"] === 'admin') {
+                        header("Location: ../admin/index.php");
+                    } else {
+                        header("Location: ../user/home.php");
+                    }
+                    exit;
+                } else {
+                    $error = true;
+                }
+            } else {
+                $error = true;
+            }
+        }
+        ?>
 
 <!doctype html>
 <html lang="en">
@@ -107,4 +107,4 @@ if (isset($_POST['login'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
-</html>
+</html> -->

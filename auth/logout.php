@@ -10,5 +10,5 @@ session_destroy();
 setcookie('id', '', time() - 86400); // expired 1 hari yang lalu
 setcookie('key', '', time() - 86400);
 
-header("Location: ../auth/login.php");
+header("Location: ../index.php");
 exit;

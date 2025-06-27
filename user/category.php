@@ -3,7 +3,7 @@ session_start();
 require '../function.php';
 
 if (!isset($_SESSION["login"]) || $_SESSION["role"] !== 'user') {
-    header("Location: ../auth/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -57,13 +57,23 @@ if ($selectedMood) $sectionTitle[] = "Mood: " . htmlspecialchars($selectedMood);
 if ($search) $sectionTitle[] = "Search: " . htmlspecialchars($search);
 if (!$sectionTitle) $sectionTitle[] = "All Movie";
 $sectionTitle = implode(' &mdash; ', $sectionTitle);
+
+$user_id = $_SESSION['user_id'];
+$watchlist = [];
+$res = mysqli_query($conn, "SELECT movie_id FROM watchlist WHERE user_id = $user_id");
+while ($row = mysqli_fetch_assoc($res)) $watchlist[] = $row['movie_id'];
+
+
+$liked_movies = [];
+$res = mysqli_query($conn, "SELECT movie_id FROM likes WHERE user_id = $user_id");
+while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Kategori | Moodflix</title>
+    <title>Category | Moodflix</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -178,9 +188,19 @@ $sectionTitle = implode(' &mdash; ', $sectionTitle);
                                 <h6 class="card-title fw-semibold mb-2"><?= htmlspecialchars($movie['title']) ?></h6>
                                 <p class="text-muted small mb-3"><?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 60, '...')) ?></p>
                                 <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                    <a href="add_watchlist.php?id=<?= $movie['id'] ?>" class="btn btn-sm btn-outline-danger mt-auto rounded-2 w-75 p-1">
-                                        <i class="bi bi-plus"></i> Add Watchlist
-                                    </a>
+                                    <?php $inWatchlist = in_array($movie['id'], $watchlist); ?>
+                                    <form class="form-watchlist w-75 d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                        <?php if ($inWatchlist): ?>
+                                            <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                <i class="bi bi-plus me-1"></i> Add Watchlist
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
                                     <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
                                         Detail
                                     </a>
@@ -310,6 +330,35 @@ $sectionTitle = implode(' &mdash; ', $sectionTitle);
             }
         });
     </script>
+
+    <!-- Script untuk toggle watchlist -->
+    <script>
+        document.addEventListener('submit', async function(e) {
+            const form = e.target.closest('.form-watchlist');
+            if (form) {
+                e.preventDefault();
+                const movieId = form.getAttribute('data-movie-id');
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                const fd = new FormData(form);
+                const res = await fetch('toggle_watchlist.php', {
+                    method: 'POST',
+                    body: fd
+                });
+                const data = await res.json();
+                btn.disabled = false;
+                if (data.status === 'added') {
+                    btn.className = 'btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1';
+                    btn.innerHTML = '<i class="bi bi-dash"></i> Remove from Watchlist';
+                } else if (data.status === 'removed') {
+                    btn.className = 'btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1';
+                    btn.innerHTML = '<i class="bi bi-plus"></i> Add Watchlist';
+                }
+            }
+        });
+    </script>
+    <!-- Script untuk toggle watchlist -->
+
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -3,14 +3,14 @@ session_start();
 require '../function.php';
 
 if (!isset($_SESSION["login"]) || $_SESSION["role"] !== 'user') {
-    header("Location: ../auth/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
 $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
 if ($user_id === 0) {
     // Redirect ke login jika user_id tidak ada
-    header("Location: ../auth/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -40,16 +40,16 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 // Ambil data watchlist user
 $query = "
-    SELECT w.id as watchlist_id, m.*
-    FROM watchlist w
-    JOIN movies m ON w.movie_id = m.id
-    WHERE w.user_id = $user_id
-    ORDER BY w.id DESC
+    SELECT movie_id FROM watchlist WHERE user_id = $user_id
 ";
 $result = mysqli_query($conn, $query);
 $watchlist = [];
-while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
-?>
+while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row['movie_id'];
+
+
+$liked_movies = [];
+$res = mysqli_query($conn, "SELECT movie_id FROM likes WHERE user_id = $user_id");
+while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
 ?>
 
 <!DOCTYPE html>
@@ -165,9 +165,19 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
                                                     <?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 90, '...')) ?>
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                                    <a href="add_watchlist.php?id=<?= $movie['id'] ?>" class="btn btn-sm btn-outline-danger mt-auto rounded-2 w-75 p-1">
-                                                        <i class="bi bi-plus"></i> Add Watchlist
-                                                    </a>
+                                                    <?php $inWatchlist = in_array($movie['id'], $watchlist); ?>
+                                                    <form class="form-watchlist w-75 d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                                        <?php if ($inWatchlist): ?>
+                                                            <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                                            </button>
+                                                        <?php else: ?>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-plus me-1"></i> Add Watchlist
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </form>
                                                     <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail w-25" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
                                                         Detail
                                                     </a>
@@ -208,9 +218,19 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
                                                     <?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 90, '...')) ?>
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                                    <a href="add_watchlist.php?id=<?= $movie['id'] ?>" class="btn btn-sm btn-outline-danger mt-auto rounded-2 w-75 p-1">
-                                                        <i class="bi bi-plus"></i> Add Watchlist
-                                                    </a>
+                                                    <?php $inWatchlist = in_array($movie['id'], $watchlist); ?>
+                                                    <form class="form-watchlist w-75 d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                                        <?php if ($inWatchlist): ?>
+                                                            <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-dash"></i> Remove from Watchlist
+                                                            </button>
+                                                        <?php else: ?>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-plus"></i> Add Watchlist
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </form>
                                                     <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
                                                         Detail
                                                     </a>
@@ -251,9 +271,19 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
                                                     <?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 90, '...')) ?>
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                                    <a href="add_watchlist.php?id=<?= $movie['id'] ?>" class="btn btn-sm btn-outline-danger mt-auto rounded-2 w-75 p-1">
-                                                        <i class="bi bi-plus"></i> Add Watchlist
-                                                    </a>
+                                                    <?php $inWatchlist = in_array($movie['id'], $watchlist); ?>
+                                                    <form class="form-watchlist w-75 d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                                        <?php if ($inWatchlist): ?>
+                                                            <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                                            </button>
+                                                        <?php else: ?>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
+                                                                <i class="bi bi-plus me-1"></i> Add Watchlist
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </form>
                                                     <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail w-25" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
                                                         Detail
                                                     </a>
@@ -321,11 +351,7 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
                             </div>
                             <div class="row mb-2">
                                 <div class="col-4 ps-0"><strong>Trailer:</strong></div>
-                                <div class="col-8 trailer">
-                                    <a href="#">
-                                        <p class="mb-0"></p>
-                                    </a>
-                                </div>
+                                <div class="col-8 trailer"></div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-4 ps-0"><strong>Duration:</strong></div>
@@ -391,8 +417,25 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
                         document.querySelector('#movieDetailModal .modal-body .movie-poster').alt = data.title + ' Poster';
                         document.querySelector('#movieDetailModal .modal-body h3').textContent = data.title;
                         document.querySelector('#movieDetailModal .modal-body .director').textContent = data.director;
-                        document.querySelector('#movieDetailModal .modal-body .trailer a').href = data.trailer_url;
-                        document.querySelector('#movieDetailModal .modal-body .trailer p').textContent = data.trailer_url;
+                        // document.querySelector('#movieDetailModal .modal-body .trailer a').href = data.trailer_url;
+                        // document.querySelector('#movieDetailModal .modal-body .trailer p').textContent = data.trailer_url;
+                        let trailerEmbed = '';
+                        if (data.trailer_url && data.trailer_url.includes('youtube.com')) {
+                            // Ambil ID video YouTube
+                            const ytId = data.trailer_url.split('v=')[1]?.split('&')[0];
+                            if (ytId) {
+                                trailerEmbed = `<div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe>
+        </div>`;
+                            } else {
+                                trailerEmbed = `<a href="${data.trailer_url}" target="_blank">${data.trailer_url}</a>`;
+                            }
+                        } else if (data.trailer_url) {
+                            trailerEmbed = `<a href="${data.trailer_url}" target="_blank">${data.trailer_url}</a>`;
+                        } else {
+                            trailerEmbed = '<span class="text-muted">No trailer available</span>';
+                        }
+                        document.querySelector('#movieDetailModal .modal-body .trailer').innerHTML = trailerEmbed;
                         document.querySelector('#movieDetailModal .modal-body .duration').textContent = data.duration + ' minutes';
                         document.querySelector('#movieDetailModal .modal-body .release-date').textContent = data.release_date;
                         document.querySelector('#movieDetailModal .modal-body .synopsis').textContent = data.synopsis;
@@ -410,6 +453,34 @@ while ($row = mysqli_fetch_assoc($result)) $watchlist[] = $row;
             }
         });
     </script>
+
+    <!-- Script untuk toggle watchlist -->
+    <script>
+        document.addEventListener('submit', async function(e) {
+            const form = e.target.closest('.form-watchlist');
+            if (form) {
+                e.preventDefault();
+                const movieId = form.getAttribute('data-movie-id');
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                const fd = new FormData(form);
+                const res = await fetch('toggle_watchlist.php', {
+                    method: 'POST',
+                    body: fd
+                });
+                const data = await res.json();
+                btn.disabled = false;
+                if (data.status === 'added') {
+                    btn.className = 'btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1';
+                    btn.innerHTML = '<i class="bi bi-dash"></i> Remove from Watchlist';
+                } else if (data.status === 'removed') {
+                    btn.className = 'btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1';
+                    btn.innerHTML = '<i class="bi bi-plus"></i> Add Watchlist';
+                }
+            }
+        });
+    </script>
+    <!-- Script untuk toggle watchlist -->
 
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>

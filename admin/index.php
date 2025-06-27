@@ -5,7 +5,7 @@ require '../function.php';
 
 // cek apakah user sudah login
 if (!isset($_SESSION["login"]) || $_SESSION["role"] !== 'admin') {
-    header("Location: ../auth/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
