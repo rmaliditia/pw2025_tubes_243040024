@@ -9,10 +9,16 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                 <img src="../assets/img/logo.png" alt="Logo" width="140">
             </a>
         </div>
-        <ul class="navbar-nav gap-4 mb-2 mb-lg-0 text-secondary align-items-center">
-            <li class="nav-item"><a class="nav-link" href="home.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="category.php">Category</a></li>
-            <li class="nav-item"><a class="nav-link" href="watchlist.php">Watchlist</a></li>
+        <ul class="navbar-nav flex-row gap-lg-4 gap-md-2 mb-2 mb-lg-0 text-secondary align-items-center">
+            <li class="nav-item">
+                <a class="nav-link px-3" href="home.php">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-3" href="category.php">Category</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-3" href="watchlist.php">Watchlist</a>
+            </li>
         </ul>
         <div class="nav-item dropdown">
             <a href="#" class="d-flex align-items-center text-secondary text-decoration-none dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

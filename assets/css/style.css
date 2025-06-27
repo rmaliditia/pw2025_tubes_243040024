@@ -448,3 +448,8 @@ body .home {
   width: calc(100% - 2.3rem);
 }
 
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 140px !important;
+  }
+}

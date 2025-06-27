@@ -170,7 +170,7 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                                                         <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
                                                         <?php if ($inWatchlist): ?>
                                                             <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
-                                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                                                <i class="bi bi-dash me-1"></i> Remove Watchlist
                                                             </button>
                                                         <?php else: ?>
                                                             <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
@@ -223,11 +223,11 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                                                         <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
                                                         <?php if ($inWatchlist): ?>
                                                             <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
-                                                                <i class="bi bi-dash"></i> Remove from Watchlist
+                                                                <i class="bi bi-dash me-1"></i> Remove Watchlist
                                                             </button>
                                                         <?php else: ?>
                                                             <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
-                                                                <i class="bi bi-plus"></i> Add Watchlist
+                                                                <i class="bi bi-plus me-1"></i> Add Watchlist
                                                             </button>
                                                         <?php endif; ?>
                                                     </form>
@@ -276,7 +276,7 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                                                         <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
                                                         <?php if ($inWatchlist): ?>
                                                             <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
-                                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                                                <i class="bi bi-dash me-1"></i> Remove Watchlist
                                                             </button>
                                                         <?php else: ?>
                                                             <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
@@ -472,10 +472,10 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                 btn.disabled = false;
                 if (data.status === 'added') {
                     btn.className = 'btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1';
-                    btn.innerHTML = '<i class="bi bi-dash"></i> Remove from Watchlist';
+                    btn.innerHTML = '<i class="bi bi-dash me-1"></i> Remove Watchlist';
                 } else if (data.status === 'removed') {
                     btn.className = 'btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1';
-                    btn.innerHTML = '<i class="bi bi-plus"></i> Add Watchlist';
+                    btn.innerHTML = '<i class="bi bi-plus me-1"></i> Add Watchlist';
                 }
             }
         });

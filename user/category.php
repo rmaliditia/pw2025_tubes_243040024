@@ -178,8 +178,8 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
         <div class="row g-4">
             <?php if (count($movies) > 0): ?>
                 <?php foreach ($movies as $movie): ?>
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+                        <div class="card border-0 shadow-sm rounded-4 w-100 h-100 d-flex flex-column">
                             <img src="../assets/img/<?= htmlspecialchars($movie['poster'] ?: 'nophoto.jpg') ?>"
                                 class="card-img-top rounded-top-4"
                                 alt="<?= htmlspecialchars($movie['title']) ?>"
@@ -187,13 +187,13 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                             <div class="card-body d-flex flex-column p-3">
                                 <h6 class="card-title fw-semibold mb-2"><?= htmlspecialchars($movie['title']) ?></h6>
                                 <p class="text-muted small mb-3"><?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 60, '...')) ?></p>
-                                <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch mt-auto gap-2">
                                     <?php $inWatchlist = in_array($movie['id'], $watchlist); ?>
-                                    <form class="form-watchlist w-75 d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                    <form class="form-watchlist w-100 d-inline" data-movie-id="<?= $movie['id'] ?>">
                                         <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
                                         <?php if ($inWatchlist): ?>
                                             <button type="submit" class="btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1">
-                                                <i class="bi bi-dash me-1"></i> Remove from Watchlist
+                                                <i class="bi bi-dash me-1"></i> Remove Watchlist
                                             </button>
                                         <?php else: ?>
                                             <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1">
@@ -201,7 +201,7 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                                             </button>
                                         <?php endif; ?>
                                     </form>
-                                    <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
+                                    <a href="movie_detail.php?id=<?= $movie['id'] ?>" class="btn btn-outline-danger btn-sm btn-detail w-100 d-flex align-items-center justify-content-center" data-id="<?= $movie['id'] ?>" data-bs-toggle="modal" data-bs-target="#movieDetailModal">
                                         Detail
                                     </a>
                                 </div>
@@ -349,10 +349,10 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
                 btn.disabled = false;
                 if (data.status === 'added') {
                     btn.className = 'btn btn-sm btn-danger d-flex justify-content-center align-items-center w-100 p-1';
-                    btn.innerHTML = '<i class="bi bi-dash"></i> Remove from Watchlist';
+                    btn.innerHTML = '<i class="bi bi-dash me-1"></i> Remove Watchlist';
                 } else if (data.status === 'removed') {
                     btn.className = 'btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center w-100 p-1';
-                    btn.innerHTML = '<i class="bi bi-plus"></i> Add Watchlist';
+                    btn.innerHTML = '<i class="bi bi-plus me-1"></i> Add Watchlist';
                 }
             }
         });

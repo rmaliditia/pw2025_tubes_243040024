@@ -84,59 +84,59 @@ while ($row = mysqli_fetch_assoc($res)) $liked_movies[] = $row['movie_id'];
         <div class="d-flex flex-column gap-3">
             <?php if (count($watchlist) > 0): ?>
                 <?php foreach ($watchlist as $movie): ?>
-                    <div class="d-flex align-items-center bg-white rounded-4 shadow-sm px-3 py-2 flex-wrap">
-                        <!-- Poster -->
-                        <img src="../assets/img/<?= htmlspecialchars($movie['poster'] ?: 'nophoto.jpg') ?>"
-                            alt="<?= htmlspecialchars($movie['title']) ?>"
-                            class="rounded-3 me-3"
-                            style="height:60px; width:45px; object-fit:cover;">
-
-                        <!-- Judul & Status -->
-                        <div class="flex-grow-1">
-                            <div class="d-flex align-items-center">
-                                <span class="fw-semibold fs-6" style="color:#dc3545;"><?= htmlspecialchars($movie['title']) ?></span>
-                                <span class="badge ms-2 <?=
-                                                        $movie['status'] === 'Watched' ? 'bg-success' : ($movie['status'] === 'Watching' ? 'bg-warning text-dark' : 'bg-secondary')
-                                                        ?>">
-                                    <?= htmlspecialchars($movie['status']) ?>
-                                </span>
+                    <div class="bg-white rounded-4 shadow-sm px-3 py-2">
+                        <div class="row align-items-center gy-2">
+                            <!-- Poster -->
+                            <div class="col-3 col-sm-2 col-md-1 text-center">
+                                <img src="../assets/img/<?= htmlspecialchars($movie['poster'] ?: 'nophoto.jpg') ?>"
+                                    alt="<?= htmlspecialchars($movie['title']) ?>"
+                                    class="rounded-3"
+                                    style="height:60px; width:45px; object-fit:cover;">
                             </div>
-                            <div class="text-muted small"><?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 60, '...')) ?></div>
-                        </div>
-
-                        <!-- Tombol-tombol -->
-                        <div class="d-flex flex-wrap gap-2 ms-3">
-                            <form action="watch.php" method="post" class="d-inline">
-                                <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Tonton"
-                                    <?= $movie['status'] === 'Watched' ? 'disabled' : '' ?>>
-                                    <i class="bi bi-play-circle"></i>
-                                </button>
-                            </form>
-                            <!-- like -->
-                            <?php $liked = in_array($movie['id'], $liked_movies); ?>
-                            <form class="form-like d-inline" data-movie-id="<?= $movie['id'] ?>">
-                                <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
-                                <button type="submit"
-                                    class="btn btn-sm <?= $liked ? 'btn-danger text-white' : 'btn-outline-danger' ?>"
-                                    title="Like">
-                                    <i class="bi bi-heart<?= $liked ? '-fill' : '' ?>"></i>
-                                </button>
-                            </form>
-                            <!-- like -->
-                            <form action="finish_watch.php" method="post" class="d-inline">
-                                <input type="hidden" name="watchlist_id" value="<?= $movie['watchlist_id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-outline-success" title="Selesai Menonton"
-                                    <?= $movie['status'] !== 'Watching' ? 'disabled' : '' ?>>
-                                    <i class="bi bi-check-circle"></i>
-                                </button>
-                            </form>
-                            <form action="delete_watchlist.php" method="post" class="d-inline" onsubmit="return confirm('Hapus dari watchlist?');">
-                                <input type="hidden" name="watchlist_id" value="<?= $movie['watchlist_id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                            <!-- Judul & Status -->
+                            <div class="col-9 col-sm-6 col-md-7">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <span class="fw-semibold fs-6" style="color:#dc3545;"><?= htmlspecialchars($movie['title']) ?></span>
+                                    <span class="badge ms-2 <?= $movie['status'] === 'Watched' ? 'bg-success' : ($movie['status'] === 'Watching' ? 'bg-warning text-dark' : 'bg-secondary') ?>">
+                                        <?= htmlspecialchars($movie['status']) ?>
+                                    </span>
+                                </div>
+                                <div class="text-muted small"><?= htmlspecialchars(mb_strimwidth($movie['synopsis'], 0, 60, '...')) ?></div>
+                            </div>
+                            <!-- Tombol-tombol -->
+                            <div class="col-12 col-sm-4 col-md-4 mt-2 mt-sm-0">
+                                <div class="d-flex flex-wrap gap-2 justify-content-sm-end">
+                                    <form action="watch.php" method="post" class="d-inline">
+                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Tonton"
+                                            <?= $movie['status'] === 'Watched' ? 'disabled' : '' ?>>
+                                            <i class="bi bi-play-circle"></i>
+                                        </button>
+                                    </form>
+                                    <?php $liked = in_array($movie['id'], $liked_movies); ?>
+                                    <form class="form-like d-inline" data-movie-id="<?= $movie['id'] ?>">
+                                        <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+                                        <button type="submit"
+                                            class="btn btn-sm <?= $liked ? 'btn-danger text-white' : 'btn-outline-danger' ?>"
+                                            title="Like">
+                                            <i class="bi bi-heart<?= $liked ? '-fill' : '' ?>"></i>
+                                        </button>
+                                    </form>
+                                    <form action="finish_watch.php" method="post" class="d-inline">
+                                        <input type="hidden" name="watchlist_id" value="<?= $movie['watchlist_id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-success" title="Selesai Menonton"
+                                            <?= $movie['status'] !== 'Watching' ? 'disabled' : '' ?>>
+                                            <i class="bi bi-check-circle"></i>
+                                        </button>
+                                    </form>
+                                    <form action="delete_watchlist.php" method="post" class="d-inline" onsubmit="return confirm('Hapus dari watchlist?');">
+                                        <input type="hidden" name="watchlist_id" value="<?= $movie['watchlist_id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
